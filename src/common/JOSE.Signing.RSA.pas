@@ -367,20 +367,22 @@ begin
   if @EVP_DigestVerifyInit = nil then
     raise Exception.Create('[RSA] Please, use OpenSSL 1.0.0. or newer!');
 
-  if GetCryptLibHandle <> 0 then
-  begin
-    _PEM_read_bio_RSA_PUBKEY := GetProcAddress(GetCryptLibHandle, 'PEM_read_bio_RSA_PUBKEY');
-    if @_PEM_read_bio_RSA_PUBKEY = nil then
-      raise Exception.Create('[RSA] Unable to get proc address for "PEM_read_bio_RSA_PUBKEY"');
+  {$ifndef ios}
+    if GetCryptLibHandle <> 0 then
+    begin
+      _PEM_read_bio_RSA_PUBKEY := GetProcAddress(GetCryptLibHandle, 'PEM_read_bio_RSA_PUBKEY');
+      if @_PEM_read_bio_RSA_PUBKEY = nil then
+        raise Exception.Create('[RSA] Unable to get proc address for "PEM_read_bio_RSA_PUBKEY"');
 
-    _EVP_MD_CTX_create := GetProcAddress(GetCryptLibHandle, 'EVP_MD_CTX_create');
-    if @_EVP_MD_CTX_create = nil then
-      raise Exception.Create('[RSA] Unable to get proc address for "EVP_MD_CTX_create"');
+      _EVP_MD_CTX_create := GetProcAddress(GetCryptLibHandle, 'EVP_MD_CTX_create');
+      if @_EVP_MD_CTX_create = nil then
+        raise Exception.Create('[RSA] Unable to get proc address for "EVP_MD_CTX_create"');
 
-    _EVP_MD_CTX_destroy := GetProcAddress(GetCryptLibHandle, 'EVP_MD_CTX_destroy');
-    if @_EVP_MD_CTX_create = nil then
-      raise Exception.Create('[RSA] Unable to get proc address for "EVP_MD_CTX_destroy"');
-  end;
+      _EVP_MD_CTX_destroy := GetProcAddress(GetCryptLibHandle, 'EVP_MD_CTX_destroy');
+      if @_EVP_MD_CTX_create = nil then
+        raise Exception.Create('[RSA] Unable to get proc address for "EVP_MD_CTX_destroy"');
+    end;
+  {$endif}
 end;
 
 initialization
